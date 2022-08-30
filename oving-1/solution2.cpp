@@ -43,6 +43,7 @@ void read_temperatures(double temperatures[], int length) {
     for (int i = 0; i < length ; i++) {
         file >> number; // Read number
         temperatures[i] = number; 
+        std::cout << temperatures[i] << std::endl;
     }
     file.close();
 }
