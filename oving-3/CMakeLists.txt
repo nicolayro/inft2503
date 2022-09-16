@@ -6,3 +6,4 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y -Wall -Wextra")
 
 add_executable(solution12 solution12.cpp)
 add_executable(solution3 solution3.cpp commodity.cpp)
+add_executable(solution4 solution4.cpp)
