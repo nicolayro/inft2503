@@ -24,7 +24,7 @@ double Circle::get_circumference() const {
 }
 
 int main() {
-    Circle circle(10.0);
+    Circle circle(5);
     std::cout << "Area: " << circle.get_area() << std::endl;
     std::cout << "Circumference: " << circle.get_circumference() << std::endl;
 
