@@ -24,6 +24,7 @@ public:
         return "black";
     }
 
+
     /// Return color and type of the chess piece
     virtual std::string type() const = 0;
 
