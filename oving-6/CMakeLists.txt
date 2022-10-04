@@ -11,3 +11,6 @@ include_directories(${Boost_INCLUDE_DIR})
 
 add_executable(server server.cpp)
 target_link_libraries(server ${Boost_LIBRARIES})
+
+add_executable(main new_server.cpp )
+target_link_libraries(main ${Boost_LIBRARIES})
