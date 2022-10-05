@@ -1,5 +1,5 @@
 #include <stdexcept>
-#include <string>
+#include "utils.hpp"
 
 // Extracts the endpoint from a http get request. Example:
 //   GET /helloworld HTTP/1.1

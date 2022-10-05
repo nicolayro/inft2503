@@ -1,7 +1,7 @@
 #include <boost/asio.hpp>
-#include <iostream>
-#include "http_server.hpp"
-#include "utils.cpp"
+#include <iostream> 
+#include "http_server.hpp" 
+#include "utils.hpp" 
 
 HttpServer::HttpServer(int port) :
     url(boost::asio::ip::tcp::v4(), port),
@@ -14,8 +14,10 @@ void HttpServer::start() {
 }
 
 void HttpServer::add_endpoint(const std::string &path, std::function<std::string()> create_response) {
+    std::cout << "path: " << path << std::endl;
     Endpoint endpoint(path);
     endpoint.create_response = create_response;
+    std::cout << "calling: " << endpoint.create_response() << std::endl;
     endpoints.emplace_back(endpoint);
 }
 
@@ -40,28 +42,36 @@ void HttpServer::handle_error(const boost::system::error_code &error) {
 
 std::string HttpServer::parse_request(std::shared_ptr<Connection> connection) {
     auto read_buffer = std::make_shared<boost::asio::streambuf>();
-    std::string request;
+    std::string request = "/en_side";
 
+    std::cout << "hello " << request << std::endl;
     // Read from client until newline ("\r\n")
-    async_read_until(connection->socket, *read_buffer, "\r\n",
-                     [connection, read_buffer](const boost::system::error_code &error, size_t) {
+    boost::asio::async_read_until(connection->socket, *read_buffer, "\r\n",
+                     [connection, read_buffer, &request](const boost::system::error_code &error, std::size_t length) {
+        
+        std::cout << "hello from read" << std::endl;
         if (error) {
+            std::cout << "error" << std::endl;
             throw error;
         }
         // Retrieve message from client as string:
         std::istream read_stream(read_buffer.get());
-        std::string request;
-        getline(read_stream, request);
+        std::getline(read_stream, request);
         // TODO: Consider moving the new line removal outside this function
         request.pop_back(); // Remove "\r" at the end of message
 
+        std::cout << "Request: " << request << std::endl;
         request = extract_endpoint(request);
     });
+
+    std::cout << "hello " << request << std::endl;
     return request;
 }
 
 std::string HttpServer::handle_endpoint(std::string path) {
+    std::cout << "handle endpoint: " << path << std::endl;
     for (auto &endpoint : endpoints) {
+        std::cout << "current: " << endpoint.path << std::endl;
         if (endpoint.path == path) {
             if (endpoint.create_response) {
                 return create_http_response(endpoint.create_response());
@@ -70,7 +80,8 @@ std::string HttpServer::handle_endpoint(std::string path) {
             }
         }
     }
-    throw std::string("Unhandled endpoint: " + path);
+    std::cout << "end endpoint" << std::endl;
+    throw "Unhandled endpoint: " + path;
 }
 
 void HttpServer::write_response(std::shared_ptr<Connection> connection, std::string response) {
@@ -99,9 +110,9 @@ void HttpServer::handle_request(std::shared_ptr<Connection> connection) {
         std::cout << "Created response: " << response  << std::endl;
         // Respond
         write_response(connection, response);
-    } catch(boost::system::error_code err) {
+    } catch(const boost::system::error_code err) {
         handle_error(err);
-    } catch(const char *err) {
+    } catch(std::string *err) {
         std::cerr << err << std::endl;
     }
 }

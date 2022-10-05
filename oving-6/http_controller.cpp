@@ -1,7 +1,6 @@
 #include "http_controller.hpp"
 #include "http_server.hpp"
 
-
 HttpServerController::HttpServerController(HttpServer &server) {
 
     server.add_endpoint("/", []{
@@ -21,5 +20,6 @@ HttpServerController::HttpServerController(HttpServer &server) {
                 "</body>"
                 "</html>";
     });
+
 }
 

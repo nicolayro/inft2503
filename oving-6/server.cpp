@@ -45,7 +45,7 @@ private:
   void handle_request(shared_ptr<Connection> connection) {
     auto read_buffer = make_shared<boost::asio::streambuf>();
     // Read from client until newline ("\r\n")
-    async_read_until(connection->socket, *read_buffer, "\r\n",
+    boost::asio::async_read_until(connection->socket, *read_buffer, "\r\n",
                      [this, connection, read_buffer](const boost::system::error_code &ec, size_t) {
       // If not error:
       if (!ec) {

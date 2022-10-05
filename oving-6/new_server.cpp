@@ -4,13 +4,12 @@
 #include "http_server.hpp"
 #include "http_controller.hpp"
 
-using namespace boost::asio::ip;
-
 int main() {
-    HttpServer http_server(8080);
+    int port = 8080;
+    HttpServer http_server(port);
     HttpServerController controller(http_server);
 
-    std::cout << "Starting http server" << std::endl;
+    std::cout << "Starting http server on port " << port << std::endl;
     http_server.start();
 
     return 0;
